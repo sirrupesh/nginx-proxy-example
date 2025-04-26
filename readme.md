@@ -8,6 +8,8 @@ This project demonstrates how to set up a reverse proxy using Nginx with Docker 
 .
 ├── docker-compose.yaml    # Docker Compose configuration
 ├── nginx.conf            # Nginx proxy configuration
+├── readme.md
+├── start.sh
 ├── app1/                 # First Python application
 │   ├── Dockerfile
 │   ├── main.py
