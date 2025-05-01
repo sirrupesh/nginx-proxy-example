@@ -1,5 +1,5 @@
 # Docker Compose configuration for nginx-proxy setup
-# Defines three services: nginx (reverse proxy), app1, and app2
+# Defines four services: nginx (reverse proxy), app1, app2, and my-node-app
 
 version: '3.8'
 
@@ -14,6 +14,7 @@ services:
     depends_on:
       - app1
       - app2
+      - my-node-app
 
   # Application 1 service
   app1:
@@ -30,3 +31,11 @@ services:
       dockerfile: Dockerfile
     expose:
       - "8000"  # Expose port 8000 internally
+
+  # Node.js Application service
+  my-node-app:
+    build:
+      context: ./app5
+      dockerfile: Dockerfile
+    expose:
+      - "3000"  # Expose port 3000 internally
