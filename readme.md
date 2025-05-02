@@ -1,29 +1,36 @@
-# Nginx Proxy Configuration Example
+# Nginx Reverse Proxy with Multi-Service Setup
 
-This project demonstrates how to set up a reverse proxy using Nginx with Docker Compose, implementing host-based routing for multiple applications.
+This project demonstrates a multi-service architecture using Nginx as a reverse proxy, coordinating traffic between multiple applications built with different technologies.
+
+## Services
+
+The setup includes the following services:
+- **Nginx**: Reverse proxy (Port 8080)
+- **Python App 1**: Python application (Internal port 8000)
+- **Python App 2**: Python application with 2 replicas (Internal port 8000)
+- **Node.js App**: Node.js application (Internal port 3000)
+- **Ruby App**: Ruby application (Internal port 8000)
+- **PHP App**: PHP application (Internal port 80)
 
 ## Project Structure
 
 ```
 .
-├── docker-compose.yaml    # Docker Compose configuration
-├── nginx.conf            # Nginx proxy configuration
-├── readme.md
-├── start.sh
-├── app1/                 # First Python application
-│   ├── Dockerfile
-│   ├── main.py
-│   └── requirements.txt
-└── app2/                 # Second Python application
-    ├── Dockerfile
-    ├── main.py
-    └── requirements.txt
+├── docker-compose.yaml    # Main Docker Compose configuration
+├── nginx.conf            # Nginx main configuration
+├── local.conf           # Local Nginx configuration
+├── start.sh            # Startup script
+├── app1/              # Python application 1
+├── app2/              # Python application 2
+├── app3/              # Ruby application
+├── app4/              # PHP application
+└── app5/              # Node.js application
 ```
 
 ## Features
 
 - Host-based routing using Nginx
-- Multiple Python applications running in separate containers
+- Multiple applications running in separate containers
 - Docker Compose for container orchestration
 - Custom network configuration
 - Volume mounting for Nginx configuration
@@ -41,6 +48,9 @@ This project demonstrates how to set up a reverse proxy using Nginx with Docker 
    ```
    127.0.0.1    app1.localhost
    127.0.0.1    app2.localhost
+   127.0.0.1    node-app.localhost
+   127.0.0.1    ruby-app.localhost
+   127.0.0.1    php-app.localhost
    ```
 3. Make the start script executable:
    ```bash
@@ -52,7 +62,7 @@ This project demonstrates how to set up a reverse proxy using Nginx with Docker 
    ```
 
 The start script will:
-- Build the Docker images for both applications
+- Build the Docker images for all applications
 - Stop any existing containers (if running)
 - Start all services using Docker Compose
 
@@ -61,26 +71,20 @@ Alternatively, you can manually run the services:
 docker compose up -d
 ```
 
-## Accessing the Applications
+## Access Points
 
-- App1: http://app1.localhost:8080
-- App2: http://app2.localhost:8080
+The services are available at:
+- Python App 1: http://app1.localhost:8080
+- Python App 2: http://app2.localhost:8080
+- Node.js App: http://node-app.localhost:8080
+- Ruby App: http://ruby-app.localhost:8080
+- PHP App: http://php-app.localhost:8080
 
-## Configuration Details
+## Configuration
 
-### Nginx Configuration
-
-The Nginx configuration implements host-based routing, directing traffic based on the domain name:
-- Requests to `app1.localhost` are routed to the app1 container
-- Requests to `app2.localhost` are routed to the app2 container
-
-### Docker Compose Configuration
-
-The project uses Docker Compose to manage:
-- Three containers: app1, app2, and nginx-proxy
-- A custom network for container communication
-- Port mapping (8080:80) for the Nginx proxy
-- Volume mounting for the Nginx configuration
+- The main Nginx configuration is in `nginx.conf`
+- Additional local settings are in `local.conf`
+- Service configurations are defined in `docker-compose.yaml`
 
 ## Troubleshooting
 
