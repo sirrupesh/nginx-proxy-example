@@ -27,7 +27,7 @@ services:
       - "8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.python-app1.rule=PathPrefix(`/app1`)"
+      - "traefik.http.routers.python-app1.rule=Host(`app1.localhost`)"
       - "traefik.http.services.python-app1.loadbalancer.server.port=8000"
 
   # Application 2 service
@@ -41,7 +41,7 @@ services:
       replicas: 2
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.python-app2.rule=PathPrefix(`/app2`)"
+      - "traefik.http.routers.python-app2.rule=Host(`app2.localhost`)"
       - "traefik.http.services.python-app2.loadbalancer.server.port=8000"
 
   # Node.js Application service
@@ -53,7 +53,7 @@ services:
       - "3000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.node-app.rule=PathPrefix(`/node`)"
+      - "traefik.http.routers.node-app.rule=Host(`node.localhost`)"
       - "traefik.http.services.node-app.loadbalancer.server.port=3000"
 
   # Ruby Application service
@@ -65,7 +65,7 @@ services:
       - "8000"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.ruby-app.rule=PathPrefix(`/ruby`)"
+      - "traefik.http.routers.ruby-app.rule=Host(`ruby.localhost`)"
       - "traefik.http.services.ruby-app.loadbalancer.server.port=8000"
 
   # PHP Application service
@@ -77,5 +77,5 @@ services:
       - "80"
     labels:
       - "traefik.enable=true"
-      - "traefik.http.routers.php-app.rule=PathPrefix(`/php`)"
+      - "traefik.http.routers.php-app.rule=Host(`php.localhost`)"
       - "traefik.http.services.php-app.loadbalancer.server.port=80"
