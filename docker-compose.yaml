@@ -1,23 +1,22 @@
-# Docker Compose configuration for nginx-proxy setup
-# Defines six services: nginx (reverse proxy), python-app1, python-app2, node-app, ruby-app, and php-app
+# Docker Compose configuration for traefik setup
+# Defines six services: traefik (reverse proxy), python-app1, python-app2, node-app, ruby-app, and php-app
 
 # version: '3.8'
 
 services:
-  # Nginx reverse proxy service
-  nginx:
-    image: nginx:latest
+  # Traefik reverse proxy service
+  traefik:
+    image: traefik:v2.10
+    command:
+      - "--api.insecure=true"
+      - "--providers.docker=true"
+      - "--providers.docker.exposedbydefault=false"
+      - "--entrypoints.web.address=:80"
     ports:
       - "8080:80"  # Map host port 8080 to container port 80
+      - "8081:8080"  # Traefik dashboard
     volumes:
-      - ./nginx.conf:/etc/nginx/nginx.conf:ro  # Mount nginx configuration
-      - ./local.conf:/etc/nginx/local.conf:ro  # Mount additional nginx configuration
-    depends_on:
-      - python-app1
-      - python-app2
-      - node-app
-      - ruby-app
-      - php-app
+      - /var/run/docker.sock:/var/run/docker.sock:ro  # Mount docker socket to detect services
 
   # Application 1 service
   python-app1:
@@ -25,7 +24,11 @@ services:
       context: ./app1
       dockerfile: Dockerfile
     expose:
-      - "8000"  # Expose port 8000 internally
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.python-app1.rule=PathPrefix(`/app1`)"
+      - "traefik.http.services.python-app1.loadbalancer.server.port=8000"
 
   # Application 2 service
   python-app2:
@@ -33,9 +36,13 @@ services:
       context: ./app2
       dockerfile: Dockerfile
     expose:
-      - "8000"  # Expose port 8000 internally
+      - "8000"
     deploy:
-      replicas: 2  # Specify the number of replicas
+      replicas: 2
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.python-app2.rule=PathPrefix(`/app2`)"
+      - "traefik.http.services.python-app2.loadbalancer.server.port=8000"
 
   # Node.js Application service
   node-app:
@@ -43,7 +50,11 @@ services:
       context: ./app5
       dockerfile: Dockerfile
     expose:
-      - "3000"  # Expose port 3000 internally
+      - "3000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.node-app.rule=PathPrefix(`/node`)"
+      - "traefik.http.services.node-app.loadbalancer.server.port=3000"
 
   # Ruby Application service
   ruby-app:
@@ -51,7 +62,11 @@ services:
       context: ./app3
       dockerfile: Dockerfile
     expose:
-      - "8000"  # Expose port 8000 internally
+      - "8000"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.ruby-app.rule=PathPrefix(`/ruby`)"
+      - "traefik.http.services.ruby-app.loadbalancer.server.port=8000"
 
   # PHP Application service
   php-app:
@@ -59,4 +74,8 @@ services:
       context: ./app4
       dockerfile: Dockerfile
     expose:
-      - "80"  # Expose port 80 internally
+      - "80"
+    labels:
+      - "traefik.enable=true"
+      - "traefik.http.routers.php-app.rule=PathPrefix(`/php`)"
+      - "traefik.http.services.php-app.loadbalancer.server.port=80"

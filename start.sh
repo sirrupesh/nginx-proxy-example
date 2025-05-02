@@ -1,14 +1,16 @@
 #!/bin/bash
 
-# Start script for the nginx-proxy multi-service environment
-# This script ensures all containers are rebuilt and started fresh
+echo "Stopping any running containers..."
+docker compose down
 
-# Stop any running containers and remove them
-docker-compose down
+echo "Building and starting all services..."
+docker compose up --build -d
 
-# Build and start all services defined in docker-compose.yaml
-# The -d flag runs containers in detached mode (background)
-docker-compose up --build -d
+echo "Services are starting..."
+echo "You can access:"
+echo "- Applications at http://localhost:8080/{app1,app2,ruby,php,node}"
+echo "- Traefik dashboard at http://localhost:8081"
 
-# Display the status of all running containers
-docker-compose ps
+echo "Checking service health..."
+sleep 5
+docker compose ps

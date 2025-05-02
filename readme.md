@@ -1,62 +1,50 @@
-# Nginx Reverse Proxy with Multi-Service Setup
+# Microservices with Traefik Reverse Proxy
 
-This project demonstrates a multi-service architecture using Nginx as a reverse proxy, coordinating traffic between multiple applications built with different technologies.
+This project demonstrates a microservices architecture using Traefik as a reverse proxy, managing multiple services written in different languages.
 
 ## Services
 
-The setup includes the following services:
-- **Nginx**: Reverse proxy (Port 8080)
-- **Python App 1**: Python application (Internal port 8000)
-- **Python App 2**: Python application with 2 replicas (Internal port 8000)
-- **Node.js App**: Node.js application (Internal port 3000)
-- **Ruby App**: Ruby application (Internal port 8000)
-- **PHP App**: PHP application (Internal port 80)
+- Python App 1 (`/app1`): Accessible at http://localhost:8080/app1
+- Python App 2 (`/app2`): Accessible at http://localhost:8080/app2
+- Ruby App (`/ruby`): Accessible at http://localhost:8080/ruby
+- PHP App (`/php`): Accessible at http://localhost:8080/php
+- Node.js App (`/node`): Accessible at http://localhost:8080/node
 
 ## Project Structure
 
 ```
 .
 ├── docker-compose.yaml    # Main Docker Compose configuration
-├── nginx.conf            # Nginx main configuration
-├── local.conf           # Local Nginx configuration
-├── start.sh            # Startup script
-├── app1/              # Python application 1
-├── app2/              # Python application 2
-├── app3/              # Ruby application
-├── app4/              # PHP application
-└── app5/              # Node.js application
+├── traefik.toml           # Traefik main configuration
+├── start.sh               # Startup script
+├── app1/                  # Python application 1
+├── app2/                  # Python application 2
+├── app3/                  # Ruby application
+├── app4/                  # PHP application
+└── app5/                  # Node.js application
 ```
 
 ## Features
 
-- Host-based routing using Nginx
-- Multiple applications running in separate containers
-- Docker Compose for container orchestration
-- Custom network configuration
-- Volume mounting for Nginx configuration
+- Automatic service discovery using Docker labels
+- Traefik dashboard available at http://localhost:8081
+- Load balancing (Python App 2 runs with 2 replicas)
+- Path-based routing
 
 ## Prerequisites
 
 - Docker
 - Docker Compose
-- Basic understanding of Nginx configuration
+- Basic understanding of Traefik configuration
 
 ## Getting Started
 
 1. Clone this repository
-2. Add the following entries to your `/etc/hosts` file:
-   ```
-   127.0.0.1    app1.localhost
-   127.0.0.1    app2.localhost
-   127.0.0.1    node-app.localhost
-   127.0.0.1    ruby-app.localhost
-   127.0.0.1    php-app.localhost
-   ```
-3. Make the start script executable:
+2. Make the start script executable:
    ```bash
    chmod +x start.sh
    ```
-4. Run the start script to build and start all services:
+3. Run the start script to build and start all services:
    ```bash
    ./start.sh
    ```
@@ -74,23 +62,26 @@ docker compose up -d
 ## Access Points
 
 The services are available at:
-- Python App 1: http://app1.localhost:8080
-- Python App 2: http://app2.localhost:8080
-- Node.js App: http://node-app.localhost:8080
-- Ruby App: http://ruby-app.localhost:8080
-- PHP App: http://php-app.localhost:8080
+- Python App 1: http://localhost:8080/app1
+- Python App 2: http://localhost:8080/app2
+- Ruby App: http://localhost:8080/ruby
+- PHP App: http://localhost:8080/php
+- Node.js App: http://localhost:8080/node
 
 ## Configuration
 
-- The main Nginx configuration is in `nginx.conf`
-- Additional local settings are in `local.conf`
-- Service configurations are defined in `docker-compose.yaml`
+Traefik is configured with:
+- Docker provider enabled
+- HTTP entrypoint on port 80
+- Insecure API enabled (dashboard)
+- Automatic service discovery
+- Path-based routing for all services
 
 ## Troubleshooting
 
 If you cannot access the applications:
 1. Verify that all containers are running: `docker compose ps`
-2. Check the Nginx logs: `docker compose logs nginx-proxy`
+2. Check the Traefik logs: `docker compose logs traefik`
 3. Ensure the host entries are properly configured
 4. Verify that port 8080 is not in use by another application
 
