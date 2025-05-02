@@ -9,12 +9,12 @@ from datetime import datetime
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/app2")
 def hello():
     """Return a greeting message for App 2"""
     return "Hello from App 2"
 
-@app.route("/hostname")
+@app.route("/app2/hostname")
 def get_hostname():
     """Return hostname and current time"""
     hostname = socket.gethostname()

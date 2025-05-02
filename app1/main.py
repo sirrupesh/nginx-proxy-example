@@ -7,7 +7,7 @@ from flask import Flask
 
 app = Flask(__name__)
 
-@app.route("/")
+@app.route("/app1")
 def hello():
     """Return a greeting message for App 1"""
     return "Hello from App 1"
