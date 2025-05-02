@@ -42,7 +42,7 @@ Each service is accessible through its own subdomain:
 ## Getting Started
 
 1. Clone this repository
-2. Add the following entries to your /etc/hosts file:
+2. Add the following entries to your /etc/hosts file(optional):
    ```
    127.0.0.1    app1.localhost
    127.0.0.1    app2.localhost
